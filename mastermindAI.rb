@@ -11,7 +11,8 @@ class MastermindAI
   end
 
   def update_guess(feedback)
-    @possible_solutions = update_possible_solutions(feedback)
+    correct_positions, correct_colors = feedback
+    @possible_solutions = update_possible_solutions(correct_positions, correct_colors)
     @current_guess = choose_next_guess
   end
 
@@ -21,8 +22,7 @@ class MastermindAI
     @colors.repeated_permutation(@code_length).to_a
   end
 
-  def update_possible_solutions(feedback)
-    correct_positions, correct_colors = feedback
+  def update_possible_solutions(correct_positions, correct_colors)
     @possible_solutions.select do |solution|
       matches_feedback?(solution, correct_positions, correct_colors)
     end
@@ -31,8 +31,9 @@ class MastermindAI
   def matches_feedback?(solution, correct_positions, correct_colors)
     correct_pos = 0
     correct_col = 0
+
     solution.each_with_index do |color, index|
-      if @current_guess[index] == color
+      if solution[index] == @current_guess[index]
         correct_pos += 1
       elsif @current_guess.include?(color)
         correct_col += 1
@@ -46,7 +47,7 @@ class MastermindAI
     if @possible_solutions.empty?
       nil # Return nil if no valid guess can be made
     else
-      @possible_solutions.sample
+      @possible_solutions.first
     end
   end
 end

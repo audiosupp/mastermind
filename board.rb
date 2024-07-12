@@ -32,12 +32,11 @@ class Board
   def make_move(arr)
     if arr.size == 4 && arr.all? { |i| i.between?(1, 8) }
       feedback = calculate_feedback(arr)
-      p feedback
+      feedback(feedback)
       if feedback[0] == 4
         @cells[@current_row] = arr
         puts "Correct move! Feedback: #{feedback.join(' ')}"
         @current_row += 1
-        p @winning_position
       else
         @cells[@current_row] = arr
         puts "Incorrect move. Feedback: #{feedback.join(' ')}"
@@ -53,7 +52,8 @@ class Board
     @winning_position == @cells[@current_row - 1]
   end
 
-  # def feedback
+  # def feedback(arr)
+
   #   temp = []
   #   @cells[@current_row - 1].select.each_with_index do |item, index|
   #     if @winning_position[index] == item
@@ -67,19 +67,36 @@ class Board
   #   @feedback[@current_row - 1] = temp.shuffle!
   # end
   #
+  def feedback(arr)
+    temp = []
+    arr[0].times do
+      temp << 'X'
+    end
+    arr[1].times do
+      temp << 'O'
+    end
+    (4 - temp.size).times do
+      temp << '-'
+    end
+    @feedback[@current_row] = temp.shuffle!
+  end
 
   def calculate_feedback(guess)
     correct_positions = 0
     correct_colors = 0
-
+    temp = []
     guess.each_with_index do |color, index|
       if @winning_position[index] == color
         correct_positions += 1
-      elsif @winning_position.include?(color)
+        temp << color
+      end
+    end
+    diff = @winning_position - temp
+    guess.each do |color|
+      if diff.include?(color)
         correct_colors += 1
       end
     end
-
     [correct_positions, correct_colors]
   end
 

@@ -54,13 +54,13 @@ until match
   board.display
   puts 'guess colors'
   guess = masterAI.initial_guess
-  input = gets.chomp.each_char.map(&:to_i)
-  if board.make_move(input)
-    board.calculate_feedback(input)
+  #input = gets.chomp.each_char.map(&:to_i)
+  if board.make_move(guess)
+    #board.calculate_feedback(input)
     #index = board.current_row
     #p board.calculate_feedback(guess)
     #masterAI.update_guess(guess)
-    #masterAI.update_guess(board.feedback)
+    masterAI.update_guess(board.calculate_feedback(guess))
     #ai.read_output(board.feedback, index)
   else
     puts 'Log only four numbers between 1..8 each'
